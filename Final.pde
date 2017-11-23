@@ -2,6 +2,8 @@
 
 // set up a boolean variable to check if the simulator has started
 Boolean hasBeenFired = false;
+Boolean hasMovedRight1 = false;
+
 
 // set up a variable to store the direction that is being taken. 
 // This is used to change to the correct directional image on key release
@@ -13,6 +15,7 @@ float newY = 0;
 
 int numFrames = 24;  // The number of frames in the animation
 int currentFrame = 0;
+int currentScreen = 1;
 
 //set up arrays for image loops
 PImage[] imagesForward = new PImage[numFrames];
@@ -22,16 +25,19 @@ PImage[] imagesLeft = new PImage[numFrames];
 
 //set up environments, background and rainbow
 PImage bg;
+PImage bg2;
 PImage rainbow;
 
 
 void setup() {
   size(800, 800);
   frameRate(24);
-  
+
   //load foreground and background
-  
+
   bg  = loadImage("bg.png");
+  bg2  = loadImage("bg2.png");
+
   rainbow  = loadImage("rainbow.png");
 
 
@@ -149,7 +155,7 @@ void draw() {
   println(hasBeenFired);
   image(bg, 0, 0);
   //background(255);
-    currentFrame = (currentFrame+1) % numFrames;  // Use % to cycle through frames
+  currentFrame = (currentFrame+1) % numFrames;  // Use % to cycle through frames
   int offset = 0;
 
   //load the intitial image before a key has been pressed. Do this one time only.
@@ -157,6 +163,19 @@ void draw() {
   if (hasBeenFired == false) {
     image(imagesForward[0], newX, newY);
   }
+
+
+  if (newX >= 800 && hasMovedRight1 == false) {
+    println("movedrightscreen");
+    hasMovedRight1 = true;
+    newX = 10;
+    currentScreen = 2;
+  }
+  
+  if(currentScreen == 2){
+      image(bg2, 0, 0);  
+  }
+  
 
   //Direction Controls
   if (keyPressed && key == CODED) {
@@ -195,6 +214,5 @@ void draw() {
       image(imagesRight[0], newX, newY);
     }
   }
-    image(rainbow, 0, 0);
-
+  image(rainbow, 0, 0);
 }
