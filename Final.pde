@@ -1,9 +1,9 @@
 // Make a top-down 2d simulator especially like Link to the Past.
 
-// set up a boolean variable to check if the simulator has started
+// set up a boolean trigger variables to check for conditions
 Boolean hasBeenFired = false;
 Boolean hasMovedRight1 = false;
-
+Boolean hasMovedLeft1 = false;
 
 // set up a variable to store the direction that is being taken. 
 // This is used to change to the correct directional image on key release
@@ -152,30 +152,69 @@ void setup() {
 } 
 
 void draw() { 
-  println(hasBeenFired);
-  image(bg, 0, 0);
-  //background(255);
+
   currentFrame = (currentFrame+1) % numFrames;  // Use % to cycle through frames
+
   int offset = 0;
+
+//logic for screen movement
+
+  if (newX >= 800 && hasMovedRight1 == false) {
+    println("movedrightscreen");
+    hasMovedRight1 = true;
+    hasMovedLeft1 = false;
+    newX = 10;
+    currentScreen = 2;
+  }
+
+  if (newX <= -100 && currentScreen == 2 && hasMovedLeft1 == false) {
+    println("movedleftscreen");
+    hasMovedLeft1 = true;
+    hasMovedRight1 = false;
+    newX = 750;
+    currentScreen = 1;
+  }
+
+
+// Set specific left and right boundaries for beginning and ending screens
+
+  if (newX <= -100 && currentScreen == 1) {
+
+    newX = -99;
+    currentScreen = 1;
+  }
+
+  if (newX >= 601 && currentScreen == 2) {
+    newX = 600;
+  }
+
+  //Generic testing for upper and lower bounds.
+
+  if (newY <= -100) {
+    newY = -99;
+  }
+
+  if (newY >= 651) {
+    newY = 650;
+  }
+
+
+//draw and setup the appropriate screens based on location
+
+  if (currentScreen == 2) {
+    image(bg2, 0, 0);
+  }
+
+
+  if (currentScreen == 1) {
+    image(bg, 0, 0);
+  }
 
   //load the intitial image before a key has been pressed. Do this one time only.
 
   if (hasBeenFired == false) {
     image(imagesForward[0], newX, newY);
   }
-
-
-  if (newX >= 800 && hasMovedRight1 == false) {
-    println("movedrightscreen");
-    hasMovedRight1 = true;
-    newX = 10;
-    currentScreen = 2;
-  }
-  
-  if(currentScreen == 2){
-      image(bg2, 0, 0);  
-  }
-  
 
   //Direction Controls
   if (keyPressed && key == CODED) {
